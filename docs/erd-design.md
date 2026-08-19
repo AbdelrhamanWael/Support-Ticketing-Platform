@@ -1,5 +1,8 @@
 # Entity Relationship Design — Support Ticketing Platform
 
+![Entity Relationship Diagram](erd-diagram.png)
+
+
 ## 1. ERD Diagram (Mermaid)
 
 ```mermaid
