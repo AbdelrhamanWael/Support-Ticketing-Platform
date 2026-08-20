@@ -1,5 +1,7 @@
 using Serilog;
+using Scalar.AspNetCore;
 using SupportTicketingPlatform.Application;
+using SupportTicketingPlatform.Infrastructure;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -18,18 +20,28 @@ try
         .WriteTo.Console());
 
     builder.Services.AddApplicationServices();
+    builder.Services.AddInfrastructureServices(builder.Configuration);
+    builder.Services.AddControllers();
     builder.Services.AddOpenApi();
 
     var app = builder.Build();
+    
+    app.UseMiddleware<SupportTicketingPlatform.API.Middleware.ExceptionHandlingMiddleware>();
 
     app.UseSerilogRequestLogging();
 
     if (app.Environment.IsDevelopment())
     {
         app.MapOpenApi();
+        app.MapScalarApiReference();
     }
 
     app.UseHttpsRedirection();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.MapControllers();
 
     app.Run();
 }

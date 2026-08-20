@@ -1,13 +1,19 @@
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace SupportTicketingPlatform.Application;
-
-public static class DependencyInjection
+namespace SupportTicketingPlatform.Application
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    public static class DependencyInjection
     {
-        services.AddAutoMapper(cfg => { }, typeof(DependencyInjection).Assembly);
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        {
+            // Register AutoMapper
+            services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());
 
-        return services;
+            // Register MediatR
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+            return services;
+        }
     }
 }
