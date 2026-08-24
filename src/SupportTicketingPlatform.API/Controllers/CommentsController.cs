@@ -19,7 +19,7 @@ namespace SupportTicketingPlatform.API.Controllers
 
         [HttpPost("public")]
         [Authorize] // مسموح لأي شخص مسجل الدخول (عميل أو موظف)
-        public async Task<IActionResult> AddPublicComment(string ticketId, [FromBody] string content)
+        public async Task<IActionResult> AddPublicComment(int ticketId, [FromBody] string content)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
             var command = new AddPublicCommentCommand { TicketId = ticketId, CommentText = content, UserId = userId };

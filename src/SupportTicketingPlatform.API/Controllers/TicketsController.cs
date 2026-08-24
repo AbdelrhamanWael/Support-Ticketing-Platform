@@ -6,6 +6,7 @@ using SupportTicketingPlatform.Application.Commands.ReassignTicket;
 using SupportTicketingPlatform.Application.Commands.Tickets.CreateTicket;
 using SupportTicketingPlatform.Application.Common;
 using SupportTicketingPlatform.Domain.Enums;
+using System.Security.Claims;
 
 namespace SupportTicketingPlatform.API.Controllers;
 

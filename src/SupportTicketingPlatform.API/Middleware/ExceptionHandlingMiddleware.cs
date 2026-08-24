@@ -37,7 +37,7 @@ namespace SupportTicketingPlatform.API.Middleware
             {
                 Status = context.Response.StatusCode,
                 Title = "Server Error",
-                Detail = "An unexpected error occurred processing your request.",
+                Detail = exception.InnerException?.Message ?? exception.Message,
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
             };
 

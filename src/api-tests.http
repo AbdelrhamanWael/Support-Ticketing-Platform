@@ -1,0 +1,138 @@
+@baseUrl = http://localhost:5112/api
+
+# =============================================
+# AUTH ENDPOINTS
+# =============================================
+
+### 1. Register a new Customer
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "ahmed@test.com",
+  "password": "Test@1234",
+  "displayName": "Ahmed Ali",
+  "phone": "01012345678"
+}
+
+###
+
+### 2. Login (Customer)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "ahmed@test.com",
+  "password": "Test@1234"
+}
+
+###
+
+### 3. Save Token from Login Response
+@token = {{login.response.body.token}}
+
+# =============================================
+# TICKETS ENDPOINTS
+# =============================================
+
+### 4. Create a Ticket (Customer)
+# categoryId: 1=Hardware, 2=Software, 3=Network
+POST {{baseUrl}}/tickets
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "My laptop is not working",
+  "description": "The screen goes black after startup",
+  "priority": 1,
+  "categoryId": 1
+}
+
+###
+
+### 5. Assign a Ticket to an Agent (SupportLead or Admin only)
+PUT {{baseUrl}}/tickets/1/assign
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "agentId": 1,
+  "note": "Please handle this urgently"
+}
+
+###
+
+### 6. Reassign a Ticket to another Agent (SupportLead or Admin only)
+PUT {{baseUrl}}/tickets/1/reassign
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "newAgentId": 2,
+  "reassignmentReason": "Original agent is unavailable"
+}
+
+###
+
+### 7. Change Ticket Status (Agent or Admin only)
+# Status values: 0=New, 1=Open, 2=InProgress, 3=Resolved, 4=Closed, 5=Cancelled
+PUT {{baseUrl}}/tickets/1/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "newStatus": 2,
+  "reason": "Agent started working on it"
+}
+
+###
+
+# =============================================
+# COMMENTS ENDPOINTS
+# =============================================
+
+### 8. Add a Public Comment on a Ticket (Any logged-in user)
+POST {{baseUrl}}/tickets/1/comments/public
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+"I checked the issue, it seems to be a hardware problem."
+
+###
+
+### 9. Add an Internal Note on a Ticket (Agent or Admin only)
+POST {{baseUrl}}/tickets/1/comments/internal
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+"Internal note: Customer needs a replacement device."
+
+###
+
+# =============================================
+# AGENTS ENDPOINTS
+# =============================================
+
+### 10. Get Agent's Ticket Queue (SupportAgent role only)
+# Optional query params: ?status=2&slaStatus=1&page=1&pageSize=10
+GET {{baseUrl}}/agents/me/tickets
+Authorization: Bearer {{token}}
+
+###
+
+# =============================================
+# CATEGORIES ENDPOINTS
+# =============================================
+
+### 11. Create a Category (Admin only)
+POST {{baseUrl}}/categories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "General Inquiry",
+  "description": "General support inquiries"
+}
+
+###

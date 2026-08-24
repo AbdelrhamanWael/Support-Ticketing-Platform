@@ -2,6 +2,7 @@ using Serilog;
 using Scalar.AspNetCore;
 using SupportTicketingPlatform.Application;
 using SupportTicketingPlatform.Infrastructure;
+using Microsoft.AspNetCore.OpenApi;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -33,7 +34,14 @@ try
     if (app.Environment.IsDevelopment())
     {
         app.MapOpenApi();
-        app.MapScalarApiReference();
+        app.MapScalarApiReference(options =>
+        {
+            options.WithPreferredScheme("Bearer")
+                   .WithHttpBearerAuthentication(bearer =>
+                   {
+                       bearer.Token = "REPLACE_WITH_YOUR_TOKEN";
+                   });
+        });
     }
 
     app.UseHttpsRedirection();
