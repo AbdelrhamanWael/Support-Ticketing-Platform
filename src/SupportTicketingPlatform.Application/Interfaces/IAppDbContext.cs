@@ -1,12 +1,19 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using SupportTicketingPlatform.Domain.Entities;
 
-namespace SupportTicketingPlatform.Application.Interfaces
+namespace SupportTicketingPlatform.Application.Interfaces;
+
+public interface IAppDbContext
 {
-    public interface IAppDbContext
-    {
-        DbSet<Ticket> Tickets { get; }
-        // Add other DbSets here as needed for CQRS
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-    }
+    DatabaseFacade Database { get; }
+
+    DbSet<Ticket> Tickets { get; }
+    DbSet<TicketAssignment> TicketAssignments { get; }
+    DbSet<AgentProfile> AgentProfiles { get; }
+    DbSet<CustomerProfile> CustomerProfiles { get; }
+    DbSet<TicketStatusHistory> TicketStatusHistories { get; }
+    DbSet<ActivityLog> ActivityLogs { get; }
+
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
