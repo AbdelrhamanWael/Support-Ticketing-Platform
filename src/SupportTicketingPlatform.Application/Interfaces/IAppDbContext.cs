@@ -16,6 +16,8 @@ public interface IAppDbContext
     DbSet<TicketStatusHistory> TicketStatusHistories { get; }
     DbSet<ActivityLog> ActivityLogs { get; }
     DbSet<TicketCategory> TicketCategories { get; }
+    DbSet<SlaPolicy> SlaPolicies { get; }
+    DbSet<SupportTeam> SupportTeams { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
