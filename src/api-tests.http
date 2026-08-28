@@ -114,7 +114,7 @@ Content-Type: application/json
 # AGENTS ENDPOINTS
 # =============================================
 
-### 10. Get Agent's Ticket Queue (SupportAgent role only)
+### 10. Get Agent's Ticket Queue (Agent role only)
 # Optional query params: ?status=2&slaStatus=1&page=1&pageSize=10
 GET {{baseUrl}}/agents/me/tickets
 Authorization: Bearer {{token}}

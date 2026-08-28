@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SupportTicketingPlatform.Application.Common;
+using SupportTicketingPlatform.Application.Queries.GetTicketConversation;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -8,6 +10,7 @@ namespace SupportTicketingPlatform.API.Controllers
 {
     [Route("api/tickets/{ticketId}/comments")]
     [ApiController]
+    [Authorize]
     public class CommentsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -15,6 +18,24 @@ namespace SupportTicketingPlatform.API.Controllers
         public CommentsController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetConversation(int ticketId)
+        {
+            var result = await _mediator.Send(new GetTicketConversationQuery(ticketId));
+
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+
+            return result.Type switch
+            {
+                ErrorType.NotFound => NotFound(new { Error = result.Error }),
+                ErrorType.Forbidden => new ForbidResult(),
+                _ => BadRequest(new { Error = result.Error })
+            };
         }
 
         [HttpPost("public")]

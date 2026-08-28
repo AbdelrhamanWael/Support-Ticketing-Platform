@@ -9,7 +9,7 @@ namespace SupportTicketingPlatform.API.Controllers;
 
 [Route("api/agents")]
 [ApiController]
-[Authorize(Roles = "SupportAgent")]
+[Authorize(Roles = "Agent")]
 public class AgentsController : ControllerBase
 {
     private readonly IMediator _mediator;

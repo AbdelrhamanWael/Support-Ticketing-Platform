@@ -10,6 +10,7 @@ using SupportTicketingPlatform.Application.Commands.Tickets.SetTicketPriority;
 using SupportTicketingPlatform.Application.Common;
 using SupportTicketingPlatform.Application.Queries.GetMyCustomerTickets;
 using SupportTicketingPlatform.Application.Queries.GetTicketDetails;
+using SupportTicketingPlatform.Application.Queries.GetTicketHistory;
 using SupportTicketingPlatform.Domain.Enums;
 using System.Security.Claims;
 
@@ -95,6 +96,14 @@ public class TicketsController : ControllerBase
     public async Task<IActionResult> ReassignTicket(int id, [FromBody] ReassignTicketRequest request)
     {
         var result = await _mediator.Send(new ReassignTicketCommand(id, request.NewAgentId, request.ReassignmentReason));
+        return ToActionResult(result, Ok);
+    }
+
+    // GET /api/tickets/{id}/history — Ticket status and assignment history
+    [HttpGet("{id:int}/history")]
+    public async Task<IActionResult> GetHistory(int id)
+    {
+        var result = await _mediator.Send(new GetTicketHistoryQuery(id));
         return ToActionResult(result, Ok);
     }
 
