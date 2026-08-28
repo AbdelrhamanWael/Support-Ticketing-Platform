@@ -5,6 +5,7 @@ using SupportTicketingPlatform.Application.Commands.AssignTicket;
 using SupportTicketingPlatform.Application.Commands.ReassignTicket;
 using SupportTicketingPlatform.Application.Commands.Tickets.CreateTicket;
 using SupportTicketingPlatform.Application.Common;
+using SupportTicketingPlatform.Application.Queries.GetTicketHistory;
 using SupportTicketingPlatform.Domain.Enums;
 using System.Security.Claims;
 
@@ -42,6 +43,13 @@ public class TicketsController : ControllerBase
     public async Task<IActionResult> ReassignTicket(int id, [FromBody] ReassignTicketRequest request)
     {
         var result = await _mediator.Send(new ReassignTicketCommand(id, request.NewAgentId, request.ReassignmentReason));
+        return ToActionResult(result, Ok);
+    }
+
+    [HttpGet("{id:int}/history")]
+    public async Task<IActionResult> GetHistory(int id)
+    {
+        var result = await _mediator.Send(new GetTicketHistoryQuery(id));
         return ToActionResult(result, Ok);
     }
 
