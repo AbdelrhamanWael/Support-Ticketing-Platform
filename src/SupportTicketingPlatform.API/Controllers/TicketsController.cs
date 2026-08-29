@@ -11,6 +11,7 @@ using SupportTicketingPlatform.Application.Common;
 using SupportTicketingPlatform.Application.Queries.GetMyCustomerTickets;
 using SupportTicketingPlatform.Application.Queries.GetTicketDetails;
 using SupportTicketingPlatform.Application.Queries.GetTicketHistory;
+using SupportTicketingPlatform.Application.Queries.SearchTickets;
 using SupportTicketingPlatform.Domain.Enums;
 using System.Security.Claims;
 
@@ -44,6 +45,21 @@ public class TicketsController : ControllerBase
         [FromQuery] int pageSize = 10)
     {
         var result = await _mediator.Send(new GetMyCustomerTicketsQuery(page, pageSize, status));
+        return ToActionResult(result, Ok);
+    }
+
+    // GET /api/tickets/search — Lead/Admin search tickets (TICKET-R18: cancelled excluded)
+    [HttpGet("search")]
+    [Authorize(Roles = "SupportLead,Admin")]
+    public async Task<IActionResult> SearchTickets(
+        [FromQuery] string? keyword,
+        [FromQuery] TicketStatus? status,
+        [FromQuery] TicketPriority? priority,
+        [FromQuery] int? categoryId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var result = await _mediator.Send(new SearchTicketsQuery(keyword, status, priority, categoryId, page, pageSize));
         return ToActionResult(result, Ok);
     }
 
