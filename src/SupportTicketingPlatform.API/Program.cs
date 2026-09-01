@@ -31,8 +31,7 @@ try
 
     app.UseSerilogRequestLogging();
 
-    if (app.Environment.IsDevelopment())
-    {
+    
         app.MapOpenApi();
         app.MapScalarApiReference(options =>
         {
@@ -42,14 +41,14 @@ try
                        bearer.Token = "REPLACE_WITH_YOUR_TOKEN";
                    });
         });
-    }
-
-    app.UseHttpsRedirection();
+    
 
     app.UseAuthentication();
     app.UseAuthorization();
 
     app.MapControllers();
+
+    app.MapGet("/", () => Results.Redirect("/scalar/v1"));
 
     app.Run();
 }
